@@ -1,0 +1,26 @@
+{
+  "id": "/3/",
+  "name": "덕트속도 · 덕트정압 계산기",
+  "short_name": "속도·정압",
+  "description": "덕트속도와 덕트정압을 서로 변환해 계산합니다.",
+  "start_url": "/3/",
+  "scope": "/3/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f2f6f8",
+  "theme_color": "#155e75",
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

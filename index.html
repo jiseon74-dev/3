@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#155e75"><link rel="manifest" href="./manifest.json"><link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png"><link rel="apple-touch-icon" href="./icon-192.png">
+<title>덕트속도 · 덕트정압 계산기</title>
+<style>
+:root{color-scheme:light;--ink:#163047;--muted:#607487;--line:#d8e2e9;--bg:#f2f6f8;--accent:#087e8b;--accent2:#155e75}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:system-ui,-apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;color:var(--ink)}
+header{background:linear-gradient(135deg,#155e75,#087e8b);color:#fff;padding:26px 18px 30px}header .wrap,main{max-width:720px;margin:auto}h1{font-size:clamp(23px,5vw,30px);margin:0 0 8px;letter-spacing:-.04em}header p{margin:0;color:#e1f4f6;font-size:14px;line-height:1.55}
+main{padding:16px 14px 32px}.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;margin:0 0 14px;box-shadow:0 5px 20px #1630470a}h2{font-size:18px;margin:0 0 14px;letter-spacing:-.025em}.hint{font-size:13px;color:var(--muted);line-height:1.6;margin:10px 0 0}.field{margin:15px 0}.field label{display:block;font-size:14px;font-weight:700;margin-bottom:8px}.switch{display:grid;grid-template-columns:1fr 1fr;gap:8px}.switch button{border:1px solid var(--line);background:#f7fafb;color:var(--ink);border-radius:12px;padding:13px 9px;font-size:14px;font-weight:700;cursor:pointer}.switch button.active{background:#e2f5f5;border-color:var(--accent);color:#075c66;box-shadow:inset 0 0 0 1px var(--accent)}.inputbox{display:flex;align-items:center;border:1px solid #bfcfd9;border-radius:12px;overflow:hidden;background:#fff}.inputbox:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px #087e8b1c}.inputbox input{width:100%;min-width:0;border:0;outline:0;padding:15px 13px;font-size:21px;font-weight:650;color:var(--ink);background:transparent}.unit{padding:0 14px;color:var(--muted);font-size:14px;white-space:nowrap}.result{background:#eaf7f7;border:1px solid #c6e9e8;border-radius:15px;padding:18px;margin-top:16px}.result-label{font-size:13px;color:#326b71;font-weight:700}.result-value{font-size:clamp(32px,8vw,42px);font-weight:800;letter-spacing:-.04em;color:#075c66;line-height:1.25;margin:8px 0}.result-value small{font-size:16px;font-weight:700;letter-spacing:0}.equation{padding:14px;background:#f6f9fb;border-radius:12px;font-size:15px;line-height:1.8;overflow-wrap:anywhere}.eqmain{font-size:19px;font-weight:750;color:#164e63}.actions{display:flex;gap:8px;margin-top:12px}.actions button{flex:1;border:1px solid var(--line);background:#fff;border-radius:10px;padding:12px;font-size:14px;font-weight:700;color:var(--ink);cursor:pointer}.actions button.primary{background:var(--accent2);color:white;border-color:var(--accent2)}footer{text-align:center;color:var(--muted);font-size:12px;padding:0 12px 24px}
+</style>
+</head>
+<body>
+<header><div class="wrap"><h1>덕트속도 · 덕트정압 계산기</h1><p>덕트속도 또는 덕트정압을 입력하면 공식에 따라 나머지 값을 자동으로 계산합니다.</p></div></header>
+<main>
+<section class="card">
+<h2>계산 방식 선택</h2>
+<div class="switch" role="group" aria-label="계산 방식">
+<button type="button" class="active" id="modeVelocity" aria-pressed="true">덕트속도 입력 → 정압 계산</button>
+<button type="button" id="modePressure" aria-pressed="false">덕트정압 입력 → 속도 계산</button>
+</div>
+<div class="field" id="velocityField"><label for="velocity">덕트속도 (V)</label><div class="inputbox"><input id="velocity" type="number" min="0" step="any" inputmode="decimal" value="10" placeholder="예: 10"><span class="unit">m/s</span></div></div>
+<div class="field" id="pressureField" hidden><label for="pressure">덕트정압 (VP)</label><div class="inputbox"><input id="pressure" type="number" min="0" step="any" inputmode="decimal" placeholder="예: 6.12"><span class="unit">mmH₂O</span></div></div>
+<div class="result" aria-live="polite"><div class="result-label" id="resultLabel">계산된 덕트정압 (VP)</div><div class="result-value"><span id="resultValue">6.12</span> <small id="resultUnit">mmH₂O</small></div><div id="resultDetail" class="hint">V = 10 m/s일 때 VP = (10 ÷ 4.043)²</div></div>
+<div class="actions"><button type="button" class="primary" id="reset">초기화</button><button type="button" id="copyResult">결과 복사</button></div>
+</section>
+<section class="card">
+<h2>계산 공식</h2>
+<div class="equation"><div class="eqmain">V = 4.043 × √VP</div><div>덕트속도 입력 시: <strong>VP = (V ÷ 4.043)²</strong></div><div>덕트정압 입력 시: <strong>V = 4.043 × √VP</strong></div></div>
+<p class="hint">계산은 입력값이 바뀔 때마다 자동으로 갱신되며 결과는 소수점 둘째 자리까지 표시됩니다. 이 식에서 VP는 속도압(일반적으로 mmH₂O 단위로 사용하는 값)을 의미합니다. 현장에서 사용하는 압력의 정의와 단위가 다르면 적용 전 확인하세요.</p>
+</section>
+</main><footer>덕트속도 · 덕트정압 자동 계산기</footer>
+<script>
+(()=>{
+ const factor=4.043;let mode='velocity';
+ const $=id=>document.getElementById(id);const velocity=$('velocity'),pressure=$('pressure');
+ const fmt=n=>Number.isFinite(n)?n.toLocaleString('ko-KR',{maximumFractionDigits:2,minimumFractionDigits:2}):'—';
+ function setMode(next){mode=next;const isV=mode==='velocity';$('modeVelocity').classList.toggle('active',isV);$('modePressure').classList.toggle('active',!isV);$('modeVelocity').setAttribute('aria-pressed',String(isV));$('modePressure').setAttribute('aria-pressed',String(!isV));$('velocityField').hidden=!isV;$('pressureField').hidden=isV;calculate();}
+ function calculate(){let n,out,detail;if(mode==='velocity'){n=Number(velocity.value);const valid=velocity.value.trim()!==''&&Number.isFinite(n)&&n>=0;out=valid?Math.pow(n/factor,2):NaN;$('resultLabel').textContent='계산된 덕트정압 (VP)';$('resultUnit').textContent='mmH₂O';detail=valid?`V = ${fmt(n)} m/s → VP = (${fmt(n)} ÷ 4.043)² = ${fmt(out)} mmH₂O`:'0 이상의 덕트속도를 입력하세요.';}else{n=Number(pressure.value);const valid=pressure.value.trim()!==''&&Number.isFinite(n)&&n>=0;out=valid?factor*Math.sqrt(n):NaN;$('resultLabel').textContent='계산된 덕트속도 (V)';$('resultUnit').textContent='m/s';detail=valid?`VP = ${fmt(n)} mmH₂O → V = 4.043 × √${fmt(n)} = ${fmt(out)} m/s`:'0 이상의 덕트정압을 입력하세요.';}$('resultValue').textContent=Number.isFinite(out)?fmt(out):'—';$('resultDetail').textContent=detail;}
+ $('modeVelocity').addEventListener('click',()=>setMode('velocity'));$('modePressure').addEventListener('click',()=>setMode('pressure'));velocity.addEventListener('input',calculate);pressure.addEventListener('input',calculate);
+ $('reset').addEventListener('click',()=>{velocity.value='';pressure.value='';calculate();(mode==='velocity'?velocity:pressure).focus();});
+ $('copyResult').addEventListener('click',async()=>{const txt=$('resultLabel').textContent+': '+$('resultValue').textContent+' '+$('resultUnit').textContent;try{await navigator.clipboard.writeText(txt);$('copyResult').textContent='복사 완료';setTimeout(()=>$('copyResult').textContent='결과 복사',1500);}catch(e){const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();$('copyResult').textContent='복사 완료';setTimeout(()=>$('copyResult').textContent='결과 복사',1500);}});
+ calculate();
+})();
+</script>
+<script>if ('serviceWorker' in navigator && location.protocol === 'https:') { window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js', { scope: './' }).catch(err => console.warn('Service worker registration failed:', err))); }</script></body>
+</html>
